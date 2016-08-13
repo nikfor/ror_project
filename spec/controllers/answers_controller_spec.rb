@@ -1,16 +1,27 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  let(:question) { create(:question) }
+  describe 'GET #new' do
+  	before { get :new, params: { question_id: question } }
+  	it 'creates a new Answer' do
+  	  expect(assigns(:answer)).to be_a_new(Answer)
+  	end
+
+  	it 'renders new view' do
+      expect(response).to render_template :new
+    end
+  end
+  
   describe 'POST #create' do
-    let(:question) { create(:question) }
     context 'with valid attributes' do
       it 'saves the new answer in the database' do
-	    expect { post :create, params:{question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
+      expect { post :create, params:{question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
       end
 
       it 'rederects to show question with answers' do
-	    post :create, params:{question_id: question, answer: attributes_for(:answer) }
-    	expect(response).to redirect_to question
+      post :create, params:{question_id: question, answer: attributes_for(:answer) }
+      expect(response).to redirect_to question
       end
     end
 
@@ -19,9 +30,9 @@ RSpec.describe AnswersController, type: :controller do
         expect { post :create, params:{question_id: question, answer: attributes_for(:invalid_answer) } }.to_not change(Answer, :count)
       end
 
-      it 'rederects to show question with answers' do
+      it 're-renders new' do
         post :create, params:{question_id: question, answer: attributes_for(:invalid_answer) }
-	    expect(response).to redirect_to question
+      expect(response).to render_template :new
       end
     end    
   end
