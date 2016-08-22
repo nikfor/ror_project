@@ -9,6 +9,7 @@ RSpec.describe QuestionsController, type: :controller do
     it 'populates an array of all questions' do
       expect(assigns(:questions)).to match_array(questions)
     end
+    
     it 'renders index view' do
       expect(response).to render_template :index
     end
@@ -29,6 +30,7 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'GET #new' do
     sign_in_user
     before { get :new }
+    
     it 'assigns a new Question to a @question' do
       expect(assigns(:question)).to be_a_new(Question)
     end
@@ -40,6 +42,7 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'GET #edit' do
     sign_in_user
     before {get :edit, id: question}
+    
     it 'assigns the requested question to @question' do
       expect(assigns(:question)).to eq question
     end
@@ -50,6 +53,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'POST #create' do
     sign_in_user
+    
     context 'with valid attributes' do
       it 'saves the new question in the database' do
         expect { post :create, question: attributes_for(:question) }.to change(Question, :count).by(1)
@@ -112,8 +116,10 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'DELETE #destroy' do
     sign_in_user
+
     context 'Author deletes his question' do
       before { question.update_attribute(:user, @user) }
+      
       it 'delete question' do
         question
         expect { delete :destroy, id: question }.to change(Question, :count).by(-1)  		
@@ -128,6 +134,7 @@ RSpec.describe QuestionsController, type: :controller do
     context 'Other user tries to delete' do
       let(:other_user) { create(:user) }
       let!(:other_question) { create(:question, user: other_user) }
+      
       it 'delete other question' do
         expect { delete :destroy, params: { id: other_question } }.to_not change(Question, :count)
       end
