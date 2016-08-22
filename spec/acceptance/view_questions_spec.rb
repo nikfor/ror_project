@@ -21,7 +21,7 @@ feature 'View list of questions', %q{
   	visit questions_path
 
   	questions.each do |question|
-  		expect(page).to have_content question.title
+  	  expect(page).to have_content question.title
   	end
   	expect(current_path).to eq questions_path
   end

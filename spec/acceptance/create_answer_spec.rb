@@ -5,10 +5,12 @@ feature 'Create answer', %q{
 	as user
 	i want to be able to create answer for question
 } do
+
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
   scenario 'Authenticated user create answer' do
     sign_in(user)
+
     visit question_path(question)
     fill_in 'answer_body', with: 'Test answer body'
     click_on 'Create answer'
@@ -19,6 +21,7 @@ feature 'Create answer', %q{
 
   scenario 'User creates invalid answer' do
   	sign_in(user)
+
   	visit question_path(question)
   	fill_in 'answer_body', with: nil
     click_on 'Create answer'
@@ -29,7 +32,6 @@ feature 'Create answer', %q{
 
    scenario 'Non-authenticated user ties to create answer to question' do
     visit question_path(question)
-
     expect(page).to_not have_content('Create answer')
   end
 end

@@ -9,10 +9,10 @@ class AnswersController < ApplicationController
   def create
     @answer = @question.answers.build(answer_params.merge(user: current_user))
     if @answer.save
-      flash[:success] = "Your answer successfully created."
+      flash[:notice] = "Your answer successfully created."
       redirect_to @question
     else
-      flash[:error] = @answer.errors.full_messages
+      flash.now[:alert] = @answer.errors
       @answers = @question.answers.reload
       render 'questions/show'
     end
@@ -20,12 +20,12 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer = Answer.find(params[:id])
-    @question = Question.find(@answer.question_id)
+    @question = @answer.question
     if current_user.id == @answer.user_id
       @answer.destroy
-      flash[:success] = "Your answer has been successfully deleted!"
+      flash[:notice] = "Your answer has been successfully deleted!"
     else
-       flash[:error] = "You cannot delete answers written by others."
+       flash[:alert] = "You cannot delete answers written by others."
     end
     redirect_to @question
   end

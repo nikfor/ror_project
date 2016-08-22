@@ -13,6 +13,7 @@ RSpec.describe QuestionsController, type: :controller do
       expect(response).to render_template :index
     end
   end
+
   describe 'GET #show' do
     before { get :show, id: question }
 
@@ -24,6 +25,7 @@ RSpec.describe QuestionsController, type: :controller do
       expect(response).to render_template :show
     end
   end
+
   describe 'GET #new' do
     sign_in_user
     before { get :new }
@@ -34,6 +36,7 @@ RSpec.describe QuestionsController, type: :controller do
       expect(response).to render_template :new
     end
   end
+
   describe 'GET #edit' do
     sign_in_user
     before {get :edit, id: question}
@@ -90,6 +93,7 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to redirect_to question
       end
     end
+    
     context 'invalid attributes' do
       it 'does not change question attributes' do
         patch :update, id: question, question:{title: 'new title', body: nil}	

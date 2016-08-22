@@ -22,16 +22,20 @@ class QuestionsController < ApplicationController
   def create
     @question = Question.new(question_params.merge(user: current_user))
     if @question.save
+      flash[:notice] = "Your question successfully created."
       redirect_to  @question
     else
+      flash.now[:alert] = @question.errors
       render :new
     end
   end
 
   def update
     if @question.update(question_params)
+      flash[:notice] = "Your question successfully updated."
       redirect_to @question
     else
+      flash.now[:alert] = @question.errors
       render :edit
     end
   end
