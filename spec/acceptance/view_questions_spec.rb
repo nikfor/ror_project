@@ -8,9 +8,9 @@ feature 'View list of questions', %q{
   let(:user) { create(:user) }	
   let!(:questions) { create_list(:question, 5) }
   scenario 'Authenticated user view list of questions' do
-  	sign_in(user)
-  	visit questions_path
-
+    sign_in(user)
+    visit questions_path
+    
   	questions.each do |question|
   		expect(page).to have_content question.title
   	end
