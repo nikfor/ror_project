@@ -8,6 +8,7 @@ feature 'Create answer', %q{
 
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
+  
   scenario 'Authenticated user create answer' do
     sign_in(user)
 
