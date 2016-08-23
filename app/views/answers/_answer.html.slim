@@ -1,4 +1,4 @@
--if !answer.body.blank?
+-if answer.body.present?
   li id="answer-#{answer.id}"
     span= answer.body
     span

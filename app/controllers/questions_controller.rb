@@ -25,7 +25,7 @@ class QuestionsController < ApplicationController
       flash[:notice] = "Your question successfully created."
       redirect_to  @question
     else
-      flash.now[:alert] = @question.errors
+      flash.now[:alert] = @question.errors.full_messages
       render :new
     end
   end
@@ -35,7 +35,7 @@ class QuestionsController < ApplicationController
       flash[:notice] = "Your question successfully updated."
       redirect_to @question
     else
-      flash.now[:alert] = @question.errors
+      flash.now[:alert] = @question.errors.full_messages
       render :edit
     end
   end
