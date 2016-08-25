@@ -38,6 +38,8 @@ group :development, :test do
   gem 'byebug', platform: :mri
   gem 'rspec-rails'
   gem 'factory_girl_rails'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 end
 group :test do
   gem 'shoulda-matchers', require: false
