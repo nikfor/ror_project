@@ -1,0 +1,32 @@
+doctype html
+html
+  head
+    title Find an answer
+    meta charset="utf-8"
+    meta name="keywords" content=""
+    meta name="author" content=""
+    = stylesheet_link_tag "application", :media => "all"
+    = javascript_include_tag "application"
+
+
+  body
+    ul
+    - if user_signed_in?
+          li
+            = link_to  "Log out", destroy_user_session_path, method: :delete
+    - else
+          li
+            = link_to  "Log in", new_user_session_path
+          li
+            = link_to  "Sign up", new_user_registration_path
+    |
+    |
+
+    #content
+    |
+    |
+    hr
+    =notice
+    =alert
+    |
+    =yield
