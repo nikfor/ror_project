@@ -8,13 +8,9 @@ class AnswersController < ApplicationController
 
   def create
     @answer = @question.answers.build(answer_params.merge(user: current_user))
-    if @answer.save
-      flash.now[:notice] = "Your answer successfully created."
-    else
-      flash.now[:alert] = @answer.errors.full_messages
+    if !@answer.save
       @answers = @question.answers.reload
     end
-    #render 'questions/show'
   end
 
   def destroy
