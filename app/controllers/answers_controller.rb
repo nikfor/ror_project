@@ -8,13 +8,8 @@ class AnswersController < ApplicationController
 
   def create
     @answer = @question.answers.build(answer_params.merge(user: current_user))
-    if @answer.save
-      flash[:notice] = "Your answer successfully created."
-      redirect_to @question
-    else
-      flash.now[:alert] = @answer.errors.full_messages
+    if !@answer.save
       @answers = @question.answers.reload
-      render 'questions/show'
     end
   end
 

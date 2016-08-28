@@ -8,10 +8,11 @@ br
 br
 - if @question.answers.any?
     ol.answers
-      = render @answers  
+      = render @question.answers  
 br
+hr
 - if user_signed_in?
-  = form_for [@question, @answer] do |f|
+  = form_for [@question, @answer], remote: true do |f|
     p= f.label :body, 'Your answer:'
     p= f.text_area :body
 
