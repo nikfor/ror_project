@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   sign_in_user
-  let(:question) { create(:question) }
+  let!(:question) { create(:question) }
   
-  let(:answer) { create(:answer, question: question, user: @user) }
+  let!(:answer) { create(:answer, question: question, user: @user) }
 
   describe 'GET #new' do
   	before { get :new, params: { question_id: question } }
@@ -46,17 +46,80 @@ RSpec.describe AnswersController, type: :controller do
     end    
   end
 
+  describe 'PATCH #update' do
+
+    context 'Author tries to update his question' do
+      it 'assigns the requested answer to @answer' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
+        expect(assigns(:answer)).to eq answer
+      end
+
+      it 'changes answer attributes' do
+        patch :update, params: { id: answer, answer: { body: 'new body' }, format: :js }
+        answer.reload
+        expect(answer.body).to eq 'new body'
+      end
+
+       it 'render update template' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
+        expect(response).to render_template :update
+      end
+    end
+  end
+
+  describe 'PATCH #best' do
+    let(:answer_author) { create(:user) }
+    let!(:another_answer) { create(:answer, question: question, user: answer_author, best: false) }
+    context 'Question author choose best answer' do
+      before do 
+        question.update_attribute(:user, @user)       
+      end
+
+      it 'assigns the requested answer to @answer' do
+        patch :best, params: { id: answer, format: :js }
+        expect(assigns(:answer)).to eq answer
+      end
+
+      it 'set the best answer' do
+        patch :best, params: { id: answer, format: :js }
+        answer.reload
+        expect(answer.best).to eq true
+      end
+
+      it 'choose another best answer' do
+        patch :best, params: { id: another_answer, format: :js }
+        answer.reload
+        another_answer.reload
+
+        expect(answer.best).to eq false
+        expect(another_answer.best).to eq true
+      end
+    end
+
+    context 'Not question author choose best answer' do
+      before do 
+        question.update_attribute(:user, answer_author)       
+      end
+      it 'another user tries to choose best answer' do
+        patch :best, params: { id: answer, format: :js }
+        answer.reload
+        
+        expect(answer.best).to eq false
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     context 'author deletes his answer' do
       before { answer }
 
       it 'deletes answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+        expect { delete :destroy, params: { id: answer, format: :js } }.to change(Answer, :count).by(-1)
       end
 
-      it 'rederects to question page' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path( answer.question_id )
+      it 'render destroy' do
+        delete :destroy, params: { id: answer, format: :js }
+        expect(response).to render_template :destroy
       end
     end
 
@@ -64,7 +127,7 @@ RSpec.describe AnswersController, type: :controller do
       let(:other_user) { create(:user) }
       let!(:other_answer) { create(:answer, question: question, user: other_user) }
       it 'delete other answer' do
-        expect { delete :destroy, params: { id: other_answer } }.to_not change(Answer, :count)
+        expect { delete :destroy, params: { id: other_answer, format: :js } }.to_not change(Answer, :count)
       end
     end
   end

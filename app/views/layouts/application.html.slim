@@ -5,9 +5,9 @@ html
     meta charset="utf-8"
     meta name="keywords" content=""
     meta name="author" content=""
+    = csrf_meta_tags
     = stylesheet_link_tag "application", :media => "all"
     = javascript_include_tag "application"
-
 
   body
     ul
@@ -19,8 +19,6 @@ html
             = link_to  "Log in", new_user_session_path
           li
             = link_to  "Sign up", new_user_registration_path
-    |
-    |
 
     #content
     |

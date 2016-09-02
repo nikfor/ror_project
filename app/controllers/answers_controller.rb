@@ -13,16 +13,36 @@ class AnswersController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+    @answer = Answer.find(params[:id])
+    @question = @answer.question
+    if current_user.id == @answer.user_id 
+      @answer.update(answer_params)
+    end
+  end
+  
+  def best
+    @answer = Answer.find(params[:id])
+    if current_user.id == @answer.question.user_id
+      @answer.check_best
+      @answer.reload
+    else
+      @best_answer_error = "You cannot choose best answer."
+    end
+  end
+
   def destroy
     @answer = Answer.find(params[:id])
     @question = @answer.question
     if current_user.id == @answer.user_id
       @answer.destroy
-      flash[:notice] = "Your answer has been successfully deleted!"
+      flash.now[:notice] = "Your answer has been successfully deleted!"
     else
-       flash[:alert] = "You cannot delete answers written by others."
+       @destroy_answer_error = "You cannot delete answers written by others."
     end
-    redirect_to @question
   end
 
   private
