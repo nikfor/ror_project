@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   sign_in_user
-  let!(:question) { create(:question) }
+  let!(:question) { create(:question, user: @user) }
   
   let!(:answer) { create(:answer, question: question, user: @user) }
 
@@ -71,9 +71,6 @@ RSpec.describe AnswersController, type: :controller do
     let(:answer_author) { create(:user) }
     let!(:another_answer) { create(:answer, question: question, user: answer_author, best: false) }
     context 'Question author choose best answer' do
-      before do 
-        question.update_attribute(:user, @user)       
-      end
 
       it 'assigns the requested answer to @answer' do
         patch :best, params: { id: answer, format: :js }
