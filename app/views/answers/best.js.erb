@@ -1,5 +1,5 @@
 <% if @best_answer_error.present? %>
-   $('.messages').html('<%= j @destroy_answer_error%><br>');
+   $('.messages').html('<%= j @best_answer_error%><br>');
 <%else%>
   $('li.best-answer').removeClass('best-answer');
   $('#answer-<%= @answer.id %>').addClass('best-answer');
