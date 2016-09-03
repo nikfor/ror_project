@@ -26,8 +26,8 @@ class AnswersController < ApplicationController
   
   def best
     if current_user.id == @answer.question.user_id
-      @answer.check_best
-      @answer.reload
+      @answer.best!
+      
     else
       @best_answer_error = "You cannot choose best answer."
     end

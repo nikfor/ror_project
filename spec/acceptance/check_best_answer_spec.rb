@@ -8,7 +8,7 @@ feature 'Check best answer', %q{
 
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
-  let(:question) { create(:question, user: user) }
+  let!(:question) { create(:question, user: user) }
   let!(:answer) {create(:answer, question: question, user: user, best: false) } 
   let!(:other_answer) { create(:answer, question: question, user: other_user, best: false) }
 
@@ -33,16 +33,22 @@ feature 'Check best answer', %q{
 
     scenario 'Author of question can choose the best answer', js: true do
       within('.answers') do
+        expect(page).to have_css('.best-answer', count: 1)
         expect(page).to have_css("li#answer-#{answer.id}.best-answer")
+        expect(question.answers).to start_with answer
       end
+      
     end
 
     scenario 'Author can choose another answer as the best', js: true do
       within("#answer-#{other_answer.id}") do
         click_on 'Best answer'
       end
+
       within('.answers') do
+        expect(page).to have_css('.best-answer', count: 1)
         expect(page).to have_no_css("li#answer-#{answer.id}.best-answer")
+        expect(question.answers).to start_with other_answer
         expect(page).to have_css("li#answer-#{other_answer.id}.best-answer")
       end
     end

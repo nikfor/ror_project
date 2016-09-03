@@ -2,9 +2,6 @@
   li id="answer-#{answer.id}" class="#{(answer.best ? 'best-answer' : '')}"
     span= answer.body
     span
-    -if answer.best
-      span= " best"
-      span
     br 
     |Posted #{time_ago_in_words(answer.created_at) } ago.
     - if user_signed_in? && (current_user.id ==   answer.user_id )
