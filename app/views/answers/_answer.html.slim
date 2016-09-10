@@ -1,9 +1,19 @@
 -if answer.body.present?
-  li id="answer-#{answer.id}"
+  li id="answer-#{answer.id}" class="#{(answer.best ? 'best-answer' : '')}"
     span= answer.body
     span
     br 
     |Posted #{time_ago_in_words(answer.created_at) } ago.
-  - if user_signed_in? && (current_user.id ==   answer.user_id )
-    p= link_to "Delete answer", answer, method: :delete,   data: { confirm: "You sure?" }
-  br
+    - if user_signed_in? && (current_user.id ==   answer.user_id )
+      p= link_to "Delete answer", answer, remote: true, method: :delete,   data: { confirm: "You sure?" }  
+      p= link_to  'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
+
+      = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}"} do |f|
+        p= f.label :body, 'Edit your answer:'
+        p= f.text_area :body
+        p= f.submit 'Update answer'
+
+    -if user_signed_in? && (current_user.id == answer.question.user_id)
+      =link_to 'Best answer', best_answer_path(answer),  method: :patch, remote: true 
+    
+br

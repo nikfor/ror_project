@@ -1,0 +1,7 @@
+<% if @best_answer_error.present? %>
+   $('.messages').html('<%= j @best_answer_error%><br>');
+<%else%>
+  $('li.best-answer').removeClass('best-answer');
+  $('#answer-<%= @answer.id %>').addClass('best-answer');
+  $('#answer-<%= @answer.id %>').prependTo($(".answers"));
+<%end%>
