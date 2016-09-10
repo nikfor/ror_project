@@ -14,7 +14,7 @@ RSpec.describe Answer, type: :model do
     let!(:other_answer) { create(:answer, question: question, user: user, best: true) } 
 
     it 'check best answer' do
-      answer.check_best
+      answer.best!
       answer.reload
       other_answer.reload
       expect(answer.best).to eq true
