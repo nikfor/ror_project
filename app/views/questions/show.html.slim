@@ -1,6 +1,10 @@
 h1=@question.title
 =link_to 'Back', questions_path
 p=@question.body
+p Attachments:
+ul
+  - @question.attachments.each do |a|
+    li= a.file.file.filename
 br
 - if user_signed_in? && ( current_user.id == @question.user_id )
   =link_to 'Delete', @question, method: :delete, data: { confirm: 'Are you sure?' }
