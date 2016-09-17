@@ -1,0 +1,5 @@
+<% if @destroy_attachmnet_error.present?%>
+  $('.messages').html('<%= j @destroy_attachmnet_error%><br>');
+<%else%>
+  $('#file-<%= @attachment.id %>').remove();
+<%end%>  

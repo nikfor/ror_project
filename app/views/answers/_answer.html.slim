@@ -2,7 +2,17 @@
   li id="answer-#{answer.id}" class="#{(answer.best ? 'best-answer' : '')}"
     span= answer.body
     span
-    br 
+      - if answer.attachments.present?
+            br
+            ul class="answer_files"
+              - answer.attachments.each do |a|
+                li id="file-#{a.id}"
+                  =link_to a.file.identifier,a.file.url
+                  |&nbsp;
+                  -if user_signed_in? && ( current_user.id == answer.user_id )
+                    = link_to 'Delete file', attachment_path(a), method: :delete,remote: true, data: { confirm: 'Are you sure?' }
+    
+    br
     |Posted #{time_ago_in_words(answer.created_at) } ago.
     - if user_signed_in? && (current_user.id ==   answer.user_id )
       p= link_to "Delete answer", answer, remote: true, method: :delete,   data: { confirm: "You sure?" }  
