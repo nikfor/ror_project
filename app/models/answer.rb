@@ -1,10 +1,10 @@
 class Answer < ApplicationRecord
   belongs_to :question, touch: true
   belongs_to :user
-  has_many :attachments, as: :attachmentable
+  has_many :attachments, as: :attachmentable, dependent: :destroy
   validates :body, :question_id, :user_id, presence: true
 
-  accepts_nested_attributes_for :attachments
+  accepts_nested_attributes_for :attachments, reject_if: :all_blank, allow_destroy: true
 
   default_scope { order(best: :desc, created_at: :asc) }
 

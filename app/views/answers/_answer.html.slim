@@ -2,25 +2,29 @@
   li id="answer-#{answer.id}" class="#{(answer.best ? 'best-answer' : '')}"
     span= answer.body
     span
-      - if answer.attachments.present?
-            br
-            ul class="answer_files"
-              - answer.attachments.each do |a|
-                li id="file-#{a.id}"
-                  =link_to a.file.identifier,a.file.url
-                  |&nbsp;
-                  -if user_signed_in? && ( current_user.id == answer.user_id )
-                    = link_to 'Delete file', attachment_path(a), method: :delete,remote: true, data: { confirm: 'Are you sure?' }
+    - if answer.attachments.present?
+          br
+          ul class="answer_files"
+            - answer.attachments.each do |a|
+              li id="file-#{a.id}"
+                =link_to a.file.identifier,a.file.url
+                |&nbsp;
+                -if user_signed_in? && ( current_user.id == answer.user_id )
+                  = link_to 'Delete file', attachment_path(a), method: :delete,remote: true, data: { confirm: 'Are you sure?' }
     
     br
     |Posted #{time_ago_in_words(answer.created_at) } ago.
     - if user_signed_in? && (current_user.id ==   answer.user_id )
       p= link_to "Delete answer", answer, remote: true, method: :delete,   data: { confirm: "You sure?" }  
-      p= link_to  'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
+      p= link_to  'Edit', '',remote: true, class: 'edit-answer-link', data: { answer_id: answer.id }
 
       = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}"} do |f|
         p= f.label :body, 'Edit your answer:'
         p= f.text_area :body
+        = f.fields_for :attachments, remote: true do |a|
+          = render 'attachment_fields', f: a
+        .answers_edit_fields
+          = link_to_add_association 'Add file', f, :attachments
         p= f.submit 'Update answer'
 
     -if user_signed_in? && (current_user.id == answer.question.user_id)
