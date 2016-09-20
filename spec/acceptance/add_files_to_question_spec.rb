@@ -12,7 +12,7 @@ feature 'Add files to question', %q{
     visit new_question_path
   end
 
-  scenario 'User deletes file' do
+  scenario 'User adds file' do
     
     attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
     click_on 'Create'
