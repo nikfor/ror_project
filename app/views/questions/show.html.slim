@@ -11,6 +11,19 @@ p
           -if user_signed_in? && ( current_user.id == @question.user_id )
             = link_to 'Delete file', attachment_path(a), method: :delete,remote: true, data: { confirm: 'Are you sure?' } 
 br
+- if user_signed_in? && ( current_user.id != @question.user_id )
+      .voting
+        .votable-total id="votable-total-#{@question.id}"
+          = @question.total
+          ul id="votable-already-links-#{@question.id}" class="#{current_user.voted?(@question) ? '' : 'hidden' }"
+            li= link_to 'change vote', [:change_vote, @question], method: :patch, remote: true
+            li= link_to 'cancel vote', [:cancel_vote, @question], method: :delete, remote: true
+                
+          
+          ul id="votable-not-yet-links-#{@question.id}" class="#{current_user.can_vote?(@question) ? '' : 'hidden' }" 
+            li= link_to 'like', [:like, @question], method: :post, remote: true
+            li= link_to 'dislike', [:dislike, @question], method: :post, remote: true           
+br
 - if user_signed_in? && ( current_user.id == @question.user_id )
   =link_to 'Delete', @question, method: :delete, data: { confirm: 'Are you sure?' }
   ||

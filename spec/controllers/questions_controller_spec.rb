@@ -1,7 +1,9 @@
 require 'rails_helper'
+require Rails.root.join('spec/controllers/concerns/voted_spec.rb')
 
 RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
+  
   describe 'GET #index' do
     let(:questions) { create_list(:question, 2) }
     before { get :index }
@@ -154,4 +156,6 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  it_behaves_like 'voted', 'question'
 end

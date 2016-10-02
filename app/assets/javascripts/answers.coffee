@@ -1,6 +1,8 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
+editAnswer = (e) ->
+  e.preventDefault()
+  $(this).hide()
+  answer_id = $(this).data('answerId')
+  $('form#edit-answer-' + answer_id).show()
 
 voting = (e, data, status, xhr) ->
   votable = $.parseJSON(xhr.responseText)
@@ -18,5 +20,7 @@ voteError = (e, data, status, xhr) ->
     $('.messages').append(value)
     
 $(document).ready ->
+  $(document).on('click', '.edit-answer-link', editAnswer)
   $(document).on('ajax:success', '.voting', voting)
   $(document).on('ajax:error', '.messages', voteError)
+
