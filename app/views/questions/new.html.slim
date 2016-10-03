@@ -4,4 +4,10 @@
   br 
   = f.label :body, 'Question essence:' 
   = f.text_area :body
+  p Attachments:
+  = f.fields_for :attachments do |a|
+    = render 'attachment_fields', f: a
+  .fields
+    = link_to_add_association 'add file', f, :attachments 
+
   = f.submit 'Create'

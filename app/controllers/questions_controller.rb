@@ -9,10 +9,12 @@ class QuestionsController < ApplicationController
   def show
     @answer = @question.answers.build
     @answers = @question.answers
+    @answer.attachments.build
   end
 
   def new
     @question = Question.new
+    @question.attachments.build
   end
 
   def edit
@@ -20,12 +22,13 @@ class QuestionsController < ApplicationController
   
 
   def create
-    @question = Question.new(question_params.merge(user: current_user))
+    @question = Question.new(question_params)
+    @question.user = current_user
     if @question.save
       flash[:notice] = "Your question successfully created."
       redirect_to  @question
     else
-      flash.now[:alert] = @question.errors.full_messages
+      flash.now[:alert] = @question.errors.full_messages.to_s
       render :new
     end
   end
@@ -57,6 +60,6 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, attachments_attributes: [:file, :_destroy])
   end
 end

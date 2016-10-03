@@ -6,6 +6,8 @@ RSpec.describe Answer, type: :model do
   it { should validate_presence_of :user_id}
   it { should belong_to(:question) }
   it { should belong_to(:user) }
+  it { should have_many :attachments }
+  it { should accept_nested_attributes_for :attachments }
 
   describe 'check_best' do
     let(:user) { create(:user) }
@@ -14,7 +16,7 @@ RSpec.describe Answer, type: :model do
     let!(:other_answer) { create(:answer, question: question, user: user, best: true) } 
 
     it 'check best answer' do
-      answer.check_best
+      answer.best!
       answer.reload
       other_answer.reload
       expect(answer.best).to eq true
