@@ -1,4 +1,6 @@
 class Answer < ApplicationRecord
+  include Votable
+
   belongs_to :question, touch: true
   belongs_to :user
   has_many :attachments, as: :attachmentable, dependent: :destroy

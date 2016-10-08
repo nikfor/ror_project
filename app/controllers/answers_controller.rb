@@ -3,6 +3,8 @@ class AnswersController < ApplicationController
   before_action :load_answer, only: [:update, :best, :destroy]
   before_action :load_question, only: [:create, :new]
 
+  include Voted
+  
   def new
     @answer = @question.answers.new
   end
