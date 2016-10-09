@@ -1,0 +1,15 @@
+<% if @destroy_comment_error.present?%>
+  $('.messages').html('<%= j @destroy_comment_error%><br>');
+<%else%>
+  
+  <%if @comment.commentable_type.downcase == 'answer'%>
+     <% publish_to "/answers/comments" do %>    
+      $('#comment-<%= @comment.id %>').remove();
+    <% end %>
+  <%else%>
+    <% publish_to "/questions/#{@comment.commentable_id}/comments" do %>
+      $('#comment-<%= @comment.id %>').remove();
+    <% end %>
+  <%end%>
+  
+<% end %>

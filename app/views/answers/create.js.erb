@@ -3,7 +3,9 @@
     $('.messages').html('<%= j error_message%><br>');
   <% end %>
 <% else %>
-  $('.answers').append('<%= j render @answer %>');
   $('.messages').html('Your answer successfully created.<br>');
   $('#answer_body').val('');
+  <% publish_to "/questions/#{@question.id}/answers" do %>
+    $('.answers').append('<%= j render @answer %>');
+  <%end%>
 <%end%>

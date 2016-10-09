@@ -1,0 +1,16 @@
+<% if @comment.errors.present? %>
+  <% @comment.errors.full_messages.each do |error_message| %>
+    $('.messages').html('<%= j error_message%><br>');
+  <% end %>
+<% else %>
+    <%if @comment.commentable_type.downcase == 'answer'%>
+     <% publish_to "/answers/comments" do %>    
+      $('#comment-<%= @comment.id %>').replaceWith('<%= j render @comment %>')
+    <% end %>
+  <%else%>
+    <% publish_to "/questions/#{@comment.commentable_id}/comments" do %>
+     $('#comment-<%= @comment.id %>').replaceWith('<%= j render @comment %>')
+    <% end %>
+  <%end%>
+
+<%end%>

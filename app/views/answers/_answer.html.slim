@@ -43,6 +43,8 @@
     -if user_signed_in?
       -if current_user.id == answer.question.user_id
         =link_to 'Best answer', best_answer_path(answer),  method: :patch, remote: true 
-
-      
+    br
+    hr
+    |comments:
+    = render partial: 'comments/comments', locals: { commentable: answer }
 br
