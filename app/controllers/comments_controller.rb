@@ -5,11 +5,16 @@ class CommentsController < ApplicationController
 
   def create
     @comment = @commentable.comments.create(comment_params)
+    respond_to do |format|
+      format.js { publish(@comment, :create); head :ok }
+    end
   end
 
   def update
     if current_user.id == @comment.user_id
-      @comment.update(comment_params)
+       respond_to do |format|
+        format.js { publish(@comment, :update) }
+      end
     end
   end
 
@@ -17,6 +22,9 @@ class CommentsController < ApplicationController
     if current_user.id == @comment.user_id
       @comment.destroy
       flash.now[:notice] = "Your comment has been successfully deleted!"
+      respond_to do |format|
+        format.js { publish(@comment, :delete) }
+      end
     else
        @destroy_comment_error = "You cannot delete comments written by others."
     end
@@ -37,6 +45,16 @@ class CommentsController < ApplicationController
 
   def load_comment
     @comment = Comment.find(params[:id])
+  end
+
+  def send_url(commentable)
+    commentable.class == Question ? commentable.id : commentable.question_id
+  end
+
+  def publish(comment, method)
+    PrivatePub.publish_to "/questions/#{ send_url(comment.commentable) }/comments", 
+                          comment: comment.to_builder, 
+                          method: method
   end
 
   def comment_params

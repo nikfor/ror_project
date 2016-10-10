@@ -1,0 +1,4 @@
+li.comment id="comment-#{ @comment.id }"
+  div id="comment_body-#{ @comment.id }"
+    #{ @comment.body }
+ 

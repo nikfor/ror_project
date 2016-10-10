@@ -51,9 +51,8 @@ hr
 br
 h3 
   |Comments:
-.question_comments
+.question_comments data= {commentable_id: "#{@question.id}"}
   = render partial: 'comments/comments', locals: { commentable: @question }
 
 
 = subscribe_to "/questions/#{@question.id}/comments"
-= subscribe_to "/answers/comments"
