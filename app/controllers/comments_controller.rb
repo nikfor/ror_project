@@ -11,8 +11,10 @@ class CommentsController < ApplicationController
   end
 
   def update
+    @check = "none"
     if current_user.id == @comment.user_id
-       respond_to do |format|
+      @comment.update(comment_params)
+      respond_to do |format|
         format.js { publish(@comment, :update) }
       end
     end

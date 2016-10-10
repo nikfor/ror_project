@@ -9,6 +9,7 @@ class Comment < ApplicationRecord
   def to_builder
     jbuilder = Jbuilder.new do |comment|
       comment.id id
+      comment.user user_id
       comment.body body
       comment.commentable_type commentable_type.downcase
       comment.commentable_id commentable_id

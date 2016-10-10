@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :load_question, only: [:show, :edit, :update, :destroy]
+  before_action :load_user
   
   include Voted
   
@@ -11,7 +12,7 @@ class QuestionsController < ApplicationController
   def show
     @answer = @question.answers.build
     @answers = @question.answers
-    @answer.attachments.build
+    @answer.attachments.build    
   end
 
   def new
@@ -57,6 +58,12 @@ class QuestionsController < ApplicationController
   end
 
   private
+
+  def load_user
+    if current_user.present?
+      gon.user = current_user
+    end
+  end
 
   def load_question
     @question = Question.find(params[:id])
