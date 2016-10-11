@@ -1,6 +1,7 @@
 -if answer.body.present?
   li id="answer-#{answer.id}" class="#{(answer.best ? 'best-answer' : '')}"
-    span= answer.body
+    span id="answer_body-#{answer.id}"
+      = answer.body
     span
     - if answer.attachments.present?
           br

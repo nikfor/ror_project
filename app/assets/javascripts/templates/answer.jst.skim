@@ -1,0 +1,12 @@
+li id="answer-#{@answer.id}" class="#{(@answer.best ? 'best-answer' : '')}"
+    span= @answer.body
+  
+    
+    - if @user == @answer.user
+      a href="/answers/#{ @answer.id }" data-method="delete" data-confirm="You sure" data-remote="true" Delete answer
+      br
+      form data-remote="true" id="edit-answer-#{ @answer_id }" action="/answers/#{ @answer_id }" accept-charset="UTF-8" method="post"
+      input type="hidden" name="_method" value="patch"
+      <label for="answer_body">Answer text</label>
+      textarea id= "answer_body" name="answer[body]" #{ @answer_body }
+      button type="submit" class="btn btn-primary active" Update answer

@@ -61,7 +61,7 @@ class QuestionsController < ApplicationController
 
   def load_user
     if current_user.present?
-      gon.user = current_user
+      gon.user = current_user.id
     end
   end
 

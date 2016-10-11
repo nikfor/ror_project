@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
   def create
     @comment = @commentable.comments.create(comment_params)
     respond_to do |format|
-      format.js { publish(@comment, :create); head :ok }
+      format.js { publish(@comment, :create) }
     end
   end
 
