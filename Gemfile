@@ -39,6 +39,7 @@ gem 'skim'
 gem 'private_pub'
 gem 'thin'
 gem 'gon'
+gem 'responders', '~> 2.0'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.1.0'

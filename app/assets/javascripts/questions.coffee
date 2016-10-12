@@ -23,4 +23,5 @@ $(document).ready ->
 
   PrivatePub.subscribe '/questions', (data, channel) ->
     question = $.parseJSON(data['question'])
+    console.log(data)
     $('.questions').append('<p><a href="/questions/'+question.id+'">' + question.title + '</a></p>')

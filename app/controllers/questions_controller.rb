@@ -2,62 +2,56 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :load_question, only: [:show, :edit, :update, :destroy]
   before_action :load_user
+  before_action :build_answer, only: [:show]
+  after_action :publish, only: [:create]
+  respond_to :html
+  respond_to :json, only: :create
   
   include Voted
   
   def index
-    @questions = Question.all
+    respond_with(@questions = Question.all)
   end
 
   def show
-    @answer = @question.answers.build
-    @answers = @question.answers
-    @answer.attachments.build    
+    @answers = @question.answers      
   end
 
   def new
-    @question = Question.new
-    @question.attachments.build
+    respond_with(@question = Question.new)    
   end
 
   def edit
   end
   
-
   def create
-    @question = Question.new(question_params)
-    @question.user = current_user
-    if @question.save
-      flash[:notice] = "Your question successfully created."
-      PrivatePub.publish_to "/questions", question: @question.to_json
-      redirect_to  @question
-    else
-      flash.now[:alert] = @question.errors.full_messages.to_s
-      render :new
-    end
+    respond_with(@question = Question.create(question_params))
   end
 
   def update
-    if @question.update(question_params)
-      flash[:notice] = "Your question successfully updated."
-      redirect_to @question
-    else
-      flash.now[:alert] = @question.errors.full_messages
-      render :edit
+    if current_user.author_of?(@question)
+      @question.update(question_params)
+      respond_with @question
     end
   end
 
   def destroy
-    if current_user.id == @question.user_id 
-      @question.destroy
-      redirect_to questions_path
+    if current_user.author_of?(@question)
+      respond_with(@question.destroy)
     else
       redirect_to question_path(@question)
     end
-    
   end
 
   private
+
+  def publish
+    PrivatePub.publish_to("/questions", question: @question.to_json, action: "create") if @question.valid?
+  end
+
+  def build_answer
+    @answer = @question.answers.build
+  end
 
   def load_user
     if current_user.present?
@@ -70,6 +64,6 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, attachments_attributes: [:file, :_destroy])
+    params.require(:question).permit(:title, :body, attachments_attributes: [:file, :_destroy]).merge(user: current_user)
   end
 end
