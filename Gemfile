@@ -35,6 +35,14 @@ gem 'devise'
 gem 'carrierwave'
 gem 'remotipart', github: 'mshibuya/remotipart', ref: '88d9a7'
 gem 'cocoon'
+gem 'skim'
+gem 'private_pub'
+gem 'thin'
+gem 'gon'
+
+source 'https://rails-assets.org' do
+  gem 'rails-assets-tether', '>= 1.1.0'
+end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

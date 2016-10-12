@@ -1,0 +1,12 @@
+li.comment id="comment-#{ comment.id }"
+    div id="comment_body-#{ comment.id }"
+      = comment.body
+    - if user_signed_in? && current_user.author_of?(comment)
+      br
+      = link_to 'Delete comment', comment_path(comment), method: :delete, remote: true
+      br
+
+      = form_for comment, remote: true, html: { id: "edit-comment-#{comment.id}", class: "edit_comment"} do |f|
+        = f.label :body, 'Comment text'
+        = f.text_area :body
+        = f.submit 'Update comment'

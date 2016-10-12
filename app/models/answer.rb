@@ -1,5 +1,6 @@
 class Answer < ApplicationRecord
   include Votable
+  include Commentable
 
   belongs_to :question, touch: true
   belongs_to :user
@@ -16,5 +17,15 @@ class Answer < ApplicationRecord
     self.best = true
     self.save!
     end
-  end  
+  end 
+
+  def to_builder
+    jbuilder = Jbuilder.new do |answer|
+      answer.id id
+      answer.user user_id
+      answer.body body
+      answer.question question_id
+    end
+    jbuilder.target!
+  end 
 end

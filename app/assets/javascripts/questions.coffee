@@ -20,3 +20,7 @@ voteError = (e, data, status, xhr) ->
 $(document).ready ->
   $(document).on('ajax:success', '.voting', voting)
   $(document).on('ajax:error', '.messages', voteError)
+
+  PrivatePub.subscribe '/questions', (data, channel) ->
+    question = $.parseJSON(data['question'])
+    $('.questions').append('<p><a href="/questions/'+question.id+'">' + question.title + '</a></p>')

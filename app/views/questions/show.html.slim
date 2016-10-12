@@ -34,6 +34,7 @@ br
 - if @question.answers.any?
     ol.answers
       = render @answers
+= subscribe_to "/questions/#{@question.id}/answers"
 br
 hr
 - if user_signed_in?
@@ -46,3 +47,12 @@ hr
       = link_to_add_association 'Add file', f, :attachments 
 
     p= f.submit 'Create answer'
+
+br
+h3 
+  |Comments:
+.question_comments data= {commentable_id: "#{@question.id}"}
+  = render partial: 'comments/comments', locals: { commentable: @question }
+
+
+= subscribe_to "/questions/#{@question.id}/comments"
