@@ -2,37 +2,32 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :load_commentable, only: [:create]
   before_action :load_comment, except: [:create]
+  after_action :publish
+
+  respond_to :js, :json
 
   def create
-    @comment = @commentable.comments.create(comment_params)
-    respond_to do |format|
-      format.js { publish(@comment, :create) }
-    end
+    @method = "create"
+    respond_with(@comment = @commentable.comments.create(comment_params))
   end
 
   def update
-    @check = "none"
-    if current_user.id == @comment.user_id
+    @method = "update"
+    if current_user.author_of?(@comment) 
       @comment.update(comment_params)
-      respond_to do |format|
-        format.js { publish(@comment, :update) }
-      end
+      respond_with(@comment)
     end
   end
 
   def destroy
-    if current_user.id == @comment.user_id
-      @comment.destroy
-      flash.now[:notice] = "Your comment has been successfully deleted!"
-      respond_to do |format|
-        format.js { publish(@comment, :delete) }
-      end
-    else
-       @destroy_comment_error = "You cannot delete comments written by others."
+    @method = "delete"
+    if current_user.author_of?(@comment)
+      respond_with(@comment.destroy)
     end
   end
   
   private
+
     def comment_params
       params.require(:comment).permit(:body)
     end
@@ -53,10 +48,8 @@ class CommentsController < ApplicationController
     commentable.class == Question ? commentable.id : commentable.question_id
   end
 
-  def publish(comment, method)
-    PrivatePub.publish_to "/questions/#{ send_url(comment.commentable) }/comments", 
-                          comment: comment.to_builder, 
-                          method: method
+  def publish
+    PrivatePub.publish_to("/questions/#{ send_url(@comment.commentable) }/comments", comment: @comment.to_builder, method: @method) if @comment.valid? 
   end
 
   def comment_params

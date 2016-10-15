@@ -25,6 +25,7 @@ class Answer < ApplicationRecord
       answer.user user_id
       answer.body body
       answer.question question_id
+      answer.attachments attachments
     end
     jbuilder.target!
   end 
