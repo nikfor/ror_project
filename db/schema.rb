@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161007130602) do
+ActiveRecord::Schema.define(version: 20161014094155) do
 
   create_table "answers", force: :cascade do |t|
     t.text     "body"
@@ -31,6 +31,16 @@ ActiveRecord::Schema.define(version: 20161007130602) do
     t.string   "attachmentable_type"
     t.index ["attachmentable_id"], name: "index_attachments_on_attachmentable_id"
     t.index ["attachmentable_type"], name: "index_attachments_on_attachmentable_type"
+  end
+
+  create_table "authorizations", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "provider"
+    t.string   "uid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_authorizations_on_provider_and_uid"
+    t.index ["user_id"], name: "index_authorizations_on_user_id"
   end
 
   create_table "comments", force: :cascade do |t|
